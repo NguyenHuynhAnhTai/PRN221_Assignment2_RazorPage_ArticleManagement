@@ -6,21 +6,23 @@ using Services.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-IServiceCollection services = new ServiceCollection();
+builder.Services.AddSingleton(typeof(INewsArticleService), typeof(NewsArticleService));
+builder.Services.AddSingleton(typeof(ICategoryService), typeof(CategoryService));
+builder.Services.AddSingleton(typeof(ISystemAccountService), typeof(SystemAccountService));
+builder.Services.AddSingleton(typeof(ITagService), typeof(TagService));
 
-services.AddSingleton(typeof(INewsArticleService), typeof(NewsArticleService));
-services.AddSingleton(typeof(ICategoryService), typeof(CategoryService));
-services.AddSingleton(typeof(ISystemAccountService), typeof(SystemAccountService));
-services.AddSingleton(typeof(ITagService), typeof(TagService));
+builder.Services.AddSingleton(typeof(ITagRepository), typeof(TagRepository));
+builder.Services.AddSingleton(typeof(ICategoryRepository), typeof(CategoryRepository));
+builder.Services.AddSingleton(typeof(ISystemAccountRepository), typeof(SystemAccountRepository));
+builder.Services.AddSingleton(typeof(INewsArticleRepository), typeof(NewsArticleRepository));
 
-services.AddSingleton(typeof(ITagRepository), typeof(TagRepository));
-services.AddSingleton(typeof(ICategoryRepository), typeof(CategoryRepository));
-services.AddSingleton(typeof(ISystemAccountRepository), typeof(SystemAccountRepository));
-services.AddSingleton(typeof(INewsArticleRepository), typeof(NewsArticleRepository));
+builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromHours(2); });
 
 builder.Services.AddRazorPages();
 
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -38,5 +40,11 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.UseSession();
+
+app.MapGet("/", (HttpContext context) =>
+{
+    context.Response.Redirect("/Login/LoginPage");
+});
 
 app.Run();
