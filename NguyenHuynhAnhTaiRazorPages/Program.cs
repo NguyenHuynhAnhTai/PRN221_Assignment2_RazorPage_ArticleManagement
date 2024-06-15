@@ -16,7 +16,10 @@ builder.Services.AddSingleton(typeof(ICategoryRepository), typeof(CategoryReposi
 builder.Services.AddSingleton(typeof(ISystemAccountRepository), typeof(SystemAccountRepository));
 builder.Services.AddSingleton(typeof(INewsArticleRepository), typeof(NewsArticleRepository));
 
-builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromHours(2); });
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(24);
+});
 
 builder.Services.AddRazorPages();
 
@@ -44,7 +47,7 @@ app.UseSession();
 
 app.MapGet("/", (HttpContext context) =>
 {
-    context.Response.Redirect("/Login/LoginPage");
+    context.Response.Redirect("/LoginPage");
 });
 
 app.Run();

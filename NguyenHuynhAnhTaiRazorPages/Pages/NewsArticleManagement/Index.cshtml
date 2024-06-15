@@ -1,0 +1,164 @@
+﻿@page
+@model NguyenHuynhAnhTaiRazorPages.Pages.NewsArticleManagement.IndexModel
+
+@{
+    Layout = "_Layout";
+}
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    .tag-name {
+        color: white;
+        background-color: #17a2b8;
+        padding: 0.5em 1em;
+        border-radius: 0.25rem;
+        display: inline-block;
+    }
+</style>
+
+<h1>Menu</h1>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="list-group">
+            <a href="/Categories" class="list-group-item list-group-item-action">Category Management</a>
+            <a href="/NewsArticleManagement" class="list-group-item list-group-item-action active">News Management</a>
+            <a href="/Tags" class="list-group-item list-group-item-action">Tags Management</a>
+            <a href="/Profile" class="list-group-item list-group-item-action">Profile Management</a>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <h1>News Management</h1>
+
+        <p>
+            <a class="btn btn-primary createButton">Create</a>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.NewsArticle[0].NewsTitle)</th>
+                    <th>@Html.DisplayNameFor(model => model.NewsArticle[0].CreatedDate)</th>
+                    <th>@Html.DisplayNameFor(model => model.NewsArticle[0].NewsContent)</th>
+                    <th>@Html.DisplayNameFor(model => model.NewsArticle[0].NewsStatus)</th>
+                    <th>@Html.DisplayNameFor(model => model.NewsArticle[0].ModifiedDate)</th>
+                    <th>@Html.DisplayNameFor(model => model.NewsArticle[0].Category)</th>
+                    <th>@Html.DisplayNameFor(model => model.NewsArticle[0].CreatedBy)</th>
+                    <th>@Html.DisplayNameFor(model => model.NewsArticle[0].Tags)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.NewsArticle)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.NewsTitle)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CreatedDate)</td>
+                        <td>@(item.NewsContent.Length > 100 ? @item.NewsContent.Substring(0, 100) + "..." : @item.NewsContent)</td>
+                        <td>@Html.DisplayFor(modelItem => item.NewsStatusDisplay)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ModifiedDate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Category.CategoryDesciption)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CreatedBy.AccountName)</td>
+                        <td>
+                            @foreach (var tag in item.Tags)
+                            {
+                                <span class="badge badge-info tag-name">@tag.TagName</span>
+                            }
+                        </td>
+                        <td class="d-flex flex-column justify-content-between">
+                            <a class="btn btn-warning updateButton" data-id="@item.NewsArticleId">Update</a>
+                            <a class="btn btn-danger deleteButton" data-id="@item.NewsArticleId">Delete</a>
+                            <button class="btn btn-primary detailsButton" data-id="@item.NewsArticleId">Details</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="formModalLabel">Form</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            // $('body').on('click', '.createButton', function () {
+            //     $('#formModalLabel').text('Create News Article');
+            //     $('.modal-body').load('/NewsArticleManagement/Edit', function () {
+            //         $('#formModal').modal('show');
+            //     });
+            // });
+
+            // $('body').on('click', '.updateButton', function () {
+            //     var id = $(this).data('id');
+            //     $('#formModalLabel').text('Update News Article');
+            //     $('.modal-body').load('/NewsArticleManagement/Edit?id=' + id, function () {
+            //         $('#formModal').modal('show');
+            //     });
+            // });
+
+            // $('body').on('click', '.deleteButton', function () {
+            //     var id = $(this).data('id');
+            //     $('#formModalLabel').text('Delete News Article');
+            //     $('.modal-body').load('/NewsArticleManagement/Delete?id=' + id, function () {
+            //         $('#formModal').modal('show');
+            //     });
+            // });
+
+            $('body').on('click', '.createButton', function () {
+                window.location.href = '/NewsArticleManagement/Edit';
+            });
+
+            $('body').on('click', '.updateButton', function () {
+                var id = $(this).data('id');
+                window.location.href = '/NewsArticleManagement/Edit?id=' + id;
+            });
+
+            $('body').on('click', '.deleteButton', function () {
+                var id = $(this).data('id');
+                window.location.href = '/NewsArticleManagement/Delete?id=' + id;
+            });
+
+            $('body').on('click', '.detailsButton', function () {
+                var newsArticleId = $(this).data('id');
+                $('#formModalLabel').text('Detail');
+                openDetailsModal(newsArticleId);
+            });
+        });
+
+        function openDetailsModal(newsArticleId) {
+            $.ajax({
+                url: '/NewsArticleManagement/Details?id=' + newsArticleId,
+                method: 'GET',
+                success: function (data) {
+                    $('.modal-body').html(data);
+                    $('#formModal').modal('show');
+                },
+            });
+        }
+
+        function closeModal() {
+            $('#formModal').modal('hide');
+            window.location.href = '/NewsArticleManagement/Index';
+        }
+    </script>
+}

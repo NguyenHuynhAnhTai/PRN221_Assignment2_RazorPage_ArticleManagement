@@ -1,0 +1,66 @@
+﻿@page
+@model NguyenHuynhAnhTaiRazorPages.Pages.NewsArticleManagement.EditModel
+
+@{
+    Layout = "_Layout";
+}
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="row">
+    <h1>News Article</h1>
+    <form method="post">
+        <input type="hidden" asp-for="NewsArticle.NewsArticleId" />
+        <div class="form-group">
+            <label asp-for="NewsArticle.NewsTitle" class="control-label"></label>
+            <input asp-for="NewsArticle.NewsTitle" class="form-control" />
+            <span asp-validation-for="NewsArticle.NewsTitle" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="NewsArticle.NewsContent" class="control-label"></label>
+            <input asp-for="NewsArticle.NewsContent" class="form-control" />
+            <span asp-validation-for="NewsArticle.NewsContent" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="NewsArticle.CategoryId" class="control-label"></label>
+            <select asp-for="NewsArticle.CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+            <span asp-validation-for="NewsArticle.CategoryId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Status" class="control-label"></label>
+            <input asp-for="Status" class="form-control" />
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="NewsArticle.Tags" class="control-label">Tags</label>
+            <select asp-for="SelectedTagIds" class="form-control" asp-items="ViewBag.Tags" multiple></select>
+        </div>
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div style="color: red" id="error-message">@Model.Message</div>
+        }
+        <div class="form-group" style="margin-top: 2%">
+            <input type="hidden" name="id" asp-for="NewsArticle.NewsArticleId" />
+            <input type="submit" value="Save" class="btn btn-primary" />
+            <a asp-page="/NewsArticleManagement/Index" class="btn btn-secondary">Close</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const errorMessage = document.getElementById("error-message");
+            if (errorMessage) {
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 2000); // 2000 milliseconds = 2 seconds
+            }
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

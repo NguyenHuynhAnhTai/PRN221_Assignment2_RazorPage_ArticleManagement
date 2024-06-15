@@ -1,0 +1,137 @@
+﻿@page
+@model NguyenHuynhAnhTaiRazorPages.Pages.News.ViewNewsModel
+
+@{
+    Layout = "_Layout";
+}
+
+@{
+    ViewData["Title"] = "ViewNews";
+}
+
+<style>
+     .tag-name {
+        color: white; 
+        background-color: #17a2b8; 
+        padding: 0.5em 1em; 
+        border-radius: 0.25rem; 
+        display: inline-block;
+    }
+</style>
+
+<h1>ViewNews</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NewsArticle[0].NewsTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NewsArticle[0].CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NewsArticle[0].NewsContent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NewsArticle[0].NewsStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NewsArticle[0].ModifiedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NewsArticle[0].Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NewsArticle[0].CreatedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NewsArticle[0].Tags)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.NewsArticle)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NewsTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NewsContent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NewsStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ModifiedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.CategoryDesciption)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedBy.AccountName)
+                </td>
+                <td>
+                    @foreach (var tag in item.Tags)
+                    {
+                        <span class="badge badge-info tag-name">@tag.TagName</span>
+                    }
+                </td>
+                <td>
+                    <button class="btn btn-primary detailsButton" data-id="@item.NewsArticleId">Details</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel">News Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Details content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('body').on('click', '.detailsButton', function () {
+                var newsArticleId = $(this).data('id');
+                openDetailsModal(newsArticleId);
+            });
+        });
+
+        function openDetailsModal(newsArticleId) {
+            $.ajax({
+                url: '/News/NewsDetail?id=' + newsArticleId,
+                method: 'GET',
+                success: function (data) {
+                    $('.modal-body').html(data);
+                    $('#detailsModal').modal('show');
+                },
+                error: function () {
+                    alert('Failed to load details.');
+                }
+            });
+        }
+
+        function closeModal() {
+            $('#detailsModal').modal('hide');
+            window.location.href = '/News/ViewNews';
+        }
+    </script>
+}
