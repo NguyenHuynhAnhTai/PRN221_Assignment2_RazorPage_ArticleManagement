@@ -27,5 +27,10 @@ namespace Services.Implementations
         {
             iTagRepository.Add(p);
         }
+
+        public void Update(Tag p)
+        {
+            iTagRepository.Update(p);
+        }
     }
 }

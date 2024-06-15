@@ -5,23 +5,23 @@ using BusinessObjects.Entities;
 using Services.Interfaces;
 using System.Text.Json;
 
-namespace NguyenHuynhAnhTaiRazorPages.Pages.CategoryManagement
+namespace NguyenHuynhAnhTaiRazorPages.Pages.TagManagement
 {
-    public class DeleteModel : PageModel
+    public class EditModel : PageModel
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ITagService _tagService;
 
-        public DeleteModel(ICategoryService categoryService)
+        public EditModel(ITagService tagService)
         {
-            _categoryService = categoryService;
+            _tagService = tagService;
         }
 
         [BindProperty]
-        public Category Category { get; set; } = default!;
+        public Tag Tag { get; set; } = default!;
 
         public string? Message { get; set; }
 
-        public IActionResult OnGet(short? id)
+        public IActionResult OnGet(int? id)
         {
             if (!CheckSession())
                 return RedirectToPage("/LoginPage");
@@ -33,52 +33,53 @@ namespace NguyenHuynhAnhTaiRazorPages.Pages.CategoryManagement
                 return Page();
             }
 
-            var category = _categoryService.GetCategories().FirstOrDefault(m => m.CategoryId == id);
-
-            if (category == null)
+            var tag = _tagService.GetTags().FirstOrDefault(m => m.TagId == id);
+            if (tag == null)
             {
                 Message = "Not Found";
                 ModelState.AddModelError(string.Empty, Message);
                 return Page();
             }
-            else
-            {
-                Category = category;
-            }
+
+            Tag = tag;
             return Page();
         }
 
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see https://aka.ms/RazorPagesCRUD.
         public IActionResult OnPost()
         {
-            string? id = Request.Form["id"];
+            if (!CheckSession())
+                return RedirectToPage("/LoginPage");
 
-            if (string.IsNullOrEmpty(id))
+            if (!ModelState.IsValid)
             {
-                return NotFound();
-            }
-
-            var category = _categoryService.GetCategories().FirstOrDefault(c => c.CategoryId.ToString() == id);
-            if (category == null)
-            {
-                Message = "Not Found";
-                ModelState.AddModelError(string.Empty, Message);
                 return Page();
             }
 
-            if (category.NewsArticles.Count > 0)
+            try
             {
-                Message = "Cannot delete category which belongs to at least 1 article";
+                var tag = _tagService.GetTags().FirstOrDefault(m => m.TagId == Tag.TagId);
+                if (tag is null)
+                {
+                    Message = "Not Found";
+                    ModelState.AddModelError(string.Empty, Message);
+                    return Page();
+                }
+
+                _tagService.Update(Tag);
+
+                Message = "Update successfully!";
+                ModelState.AddModelError(string.Empty, Message);
+
+                return Page();
+            }
+            catch(Exception ex)
+            {
+                Message = ex.Message;
                 ModelState.AddModelError(string.Empty, Message);
                 return Page();
             }
-
-            Category = category;
-            _categoryService.Delete(Category);
-
-            Message = "Delete successfully!";
-            ModelState.AddModelError(string.Empty, Message);
-
-            return Page();
         }
 
         public bool CheckSession()

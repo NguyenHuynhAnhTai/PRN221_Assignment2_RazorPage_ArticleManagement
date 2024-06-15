@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer
 {
@@ -10,7 +11,9 @@ namespace DataAccessLayer
             try
             {
                 using var context = new FunewsManagementDbContext();
-                listTags = context.Tags.ToList();
+                listTags = context.Tags
+                    .Include(x => x.NewsArticles)
+                    .ToList();
             }
             catch (Exception ex)
             {
@@ -39,6 +42,20 @@ namespace DataAccessLayer
             {
                 using var db = new FunewsManagementDbContext();
                 db.Tags.Add(p);
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public static void Update(Tag p)
+        {
+            try
+            {
+                using var db = new FunewsManagementDbContext();
+                db.Entry<Tag>(p).State = EntityState.Modified;
                 db.SaveChanges();
             }
             catch (Exception ex)

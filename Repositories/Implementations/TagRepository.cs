@@ -8,6 +8,8 @@ namespace Repositories.Implementations
     {
         public void Add(Tag p) => TagDAO.Add(p);
 
+        public void Update(Tag p) => TagDAO.Update(p);
+
         public Tag? GetTagById(int tagId) => TagDAO.GetTagById(tagId);
 
         public List<Tag> GetTags() => TagDAO.GetTags();

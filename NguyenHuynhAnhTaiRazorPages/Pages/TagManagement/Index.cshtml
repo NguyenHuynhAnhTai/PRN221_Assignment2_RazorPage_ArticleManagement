@@ -1,5 +1,6 @@
 ﻿@page
-@model NguyenHuynhAnhTaiRazorPages.Pages.CategoryManagement.IndexModel
+@model NguyenHuynhAnhTaiRazorPages.Pages.TagManagement.IndexModel
+
 
 @{
     Layout = "_Layout";
@@ -9,8 +10,9 @@
     ViewData["Title"] = "Index";
 }
 
+<h1>Menu</h1>
+
 <div class="row">
-    <h1>Menu</h1>
     <div class="col-md-3">
         <div class="list-group">
             <a href="/CategoryManagement/Index" class="list-group-item list-group-item-action">Category Management</a>
@@ -21,34 +23,37 @@
         </div>
     </div>
     <div class="col-md-9">
-        <h1>Categories Management</h1>
-        <a class="btn btn-primary createButton">Create</a>
+        <h1>Tags Management</h1>
+
+        <p>
+            <a class="btn btn-primary createButton">Create</a>
+        </p>
         <table class="table">
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Category[0].CategoryName)
+                        @Html.DisplayNameFor(model => model.Tag[0].TagName)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Category[0].CategoryDesciption)
+                        @Html.DisplayNameFor(model => model.Tag[0].Note)
                     </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Category)
+                @foreach (var item in Model.Tag)
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.CategoryName)
+                            @Html.DisplayFor(modelItem => item.TagName)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.CategoryDesciption)
+                            @Html.DisplayFor(modelItem => item.Note)
                         </td>
                         <td class="d-flex flex-column justify-content-between">
-                            <a class="btn btn-warning updateButton" data-id="@item.CategoryId">Update</a>
-                            <a class="btn btn-danger deleteButton" data-id="@item.CategoryId">Delete</a>
-                            <button class="btn btn-primary detailsButton" data-id="@item.CategoryId">Details</button>
+                            <a class="btn btn-warning updateButton" data-id="@item.TagId">Update</a>
+                            <a class="btn btn-danger deleteButton" data-id="@item.TagId">Delete</a>
+                            <button class="btn btn-primary detailsButton" data-id="@item.TagId">Details</button>
                         </td>
                     </tr>
                 }
@@ -79,29 +84,29 @@
     <script>
         $(document).ready(function () {
             $('body').on('click', '.createButton', function () {
-                window.location.href = '/CategoryManagement/Edit';
+                window.location.href = '/TagManagement/Create';
             });
 
             $('body').on('click', '.updateButton', function () {
                 var id = $(this).data('id');
-                window.location.href = '/CategoryManagement/Edit?id=' + id;
+                window.location.href = '/TagManagement/Edit?id=' + id;
             });
 
             $('body').on('click', '.deleteButton', function () {
                 var id = $(this).data('id');
-                window.location.href = '/CategoryManagement/Delete?id=' + id;
+                window.location.href = '/TagManagement/Delete?id=' + id;
             });
 
             $('body').on('click', '.detailsButton', function () {
-                var categoryId = $(this).data('id');
+                var newsArticleId = $(this).data('id');
                 $('#formModalLabel').text('Detail');
-                openDetailsModal(categoryId);
+                openDetailsModal(newsArticleId);
             });
         });
 
-        function openDetailsModal(categoryId) {
+        function openDetailsModal(newsArticleId) {
             $.ajax({
-                url: '/CategoryManagement/Details?id=' + categoryId,
+                url: '/TagManagement/Details?id=' + newsArticleId,
                 method: 'GET',
                 success: function (data) {
                     $('.modal-body').html(data);
@@ -112,7 +117,7 @@
 
         function closeModal() {
             $('#formModal').modal('hide');
-            window.location.href = '/CategoryManagement/Index';
+            window.location.href = '/TagManagement/Index';
         }
     </script>
 }

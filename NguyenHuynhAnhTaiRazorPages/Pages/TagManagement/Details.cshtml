@@ -1,0 +1,28 @@
+﻿@page
+@model NguyenHuynhAnhTaiRazorPages.Pages.TagManagement.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<div>
+    <dl class="row">
+        <dt class="col-4">
+            @Html.DisplayNameFor(model => model.Tag.TagName)
+        </dt>
+        <dd class="col-8">
+            @Html.DisplayFor(model => model.Tag.TagName)
+        </dd>
+        <dt class="col-4">
+            @Html.DisplayNameFor(model => model.Tag.Note)
+        </dt>
+        <dd class="col-8">
+            @Html.DisplayFor(model => model.Tag.Note)
+        </dd>
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div style="color: red" id="error-message">@Model.Message</div>
+        }
+    </dl>
+</div>
