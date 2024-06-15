@@ -1,28 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using BusinessObjects.Entities;
 using Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
-namespace NguyenHuynhAnhTaiRazorPages.Pages.News
+namespace NguyenHuynhAnhTaiRazorPages.Pages.CategoryManagement
 {
-    public class ViewNewsModel : PageModel
+    public class IndexModel : PageModel
     {
-        private readonly INewsArticleService _newsArticleService;
+        private readonly ICategoryService _categoryService;
 
-        public ViewNewsModel(INewsArticleService newsArticleService)
+        public IndexModel(ICategoryService categoryService)
         {
-            _newsArticleService = newsArticleService;
+            _categoryService = categoryService;
         }
 
-        public IList<NewsArticle> NewsArticle { get;set; } = default!;
+        public IList<Category> Category { get;set; } = default!;
 
         public IActionResult OnGet()
         {
             if (!CheckSession())
                 return RedirectToPage("/LoginPage");
 
-            NewsArticle = _newsArticleService.GetNewsArticles().Where(a => a.NewsStatus == true).ToList();
+            Category = _categoryService.GetCategories();
             return Page();
         }
 

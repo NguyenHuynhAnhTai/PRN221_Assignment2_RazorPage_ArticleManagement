@@ -95,6 +95,11 @@ namespace NguyenHuynhAnhTaiRazorPages.Pages.NewsArticleManagement
 
                     Message = "Create successfully!";
                     ModelState.AddModelError(string.Empty, Message);
+
+                    ViewData["CategoryId"] = new SelectList(_categoryService.GetCategories(), "CategoryId", "CategoryDesciption");
+                    ViewData["CreatedById"] = new SelectList(_systemAccountService.GetAccounts(), "AccountId", "AccountName");
+                    ViewData["Tags"] = new MultiSelectList(_tagService.GetTags(), "TagId", "TagName", SelectedTagIds);
+
                     return Page();
                 }
 
@@ -122,6 +127,10 @@ namespace NguyenHuynhAnhTaiRazorPages.Pages.NewsArticleManagement
 
                 Message = "Update successfully!";
                 ModelState.AddModelError(string.Empty, Message);
+
+                ViewData["CategoryId"] = new SelectList(_categoryService.GetCategories(), "CategoryId", "CategoryDesciption");
+                ViewData["CreatedById"] = new SelectList(_systemAccountService.GetAccounts(), "AccountId", "AccountName");
+                ViewData["Tags"] = new MultiSelectList(_tagService.GetTags(), "TagId", "TagName", SelectedTagIds);
 
                 return Page();
             }

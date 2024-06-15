@@ -87,3 +87,22 @@
     </dl>
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const errorMessage = document.getElementById("error-message");
+        if (errorMessage) {
+            const message = errorMessage.textContent.trim();
+            if (message === "Delete successfully!") {
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                    window.location.href = '/NewsArticleManagement/Index';
+                }, 1000);
+            } else {
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 1000);
+            }
+        }
+    });
+</script>

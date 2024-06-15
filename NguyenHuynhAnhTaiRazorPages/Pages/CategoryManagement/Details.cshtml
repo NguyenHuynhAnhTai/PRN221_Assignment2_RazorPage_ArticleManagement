@@ -1,0 +1,27 @@
+﻿@page
+@model NguyenHuynhAnhTaiRazorPages.Pages.CategoryManagement.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div>
+    <dl class="row">
+        <dt class="col-4">
+            @Html.DisplayNameFor(model => model.Category.CategoryName)
+        </dt>
+        <dd class="col-8">
+            @Html.DisplayFor(model => model.Category.CategoryName)
+        </dd>
+        <dt class="col-4">
+            @Html.DisplayNameFor(model => model.Category.CategoryDesciption)
+        </dt>
+        <dd class="col-8">
+            @Html.DisplayFor(model => model.Category.CategoryDesciption)
+        </dd>
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div style="color: red" id="error-message">@Model.Message</div>
+        }
+    </dl>
+</div>

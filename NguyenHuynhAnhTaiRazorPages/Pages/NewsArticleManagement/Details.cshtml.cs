@@ -17,6 +17,8 @@ namespace NguyenHuynhAnhTaiRazorPages.Pages.NewsArticleManagement
 
         public NewsArticle NewsArticle { get; set; } = default!;
 
+        public string? Message { get; set; }
+
         public IActionResult OnGet(string id)
         {
             if (!CheckSession())
@@ -24,13 +26,17 @@ namespace NguyenHuynhAnhTaiRazorPages.Pages.NewsArticleManagement
 
             if (id == null)
             {
-                return NotFound();
+                Message = "Not Found";
+                ModelState.AddModelError(string.Empty, Message);
+                return Page();
             }
 
             var newsarticle = _newsArticleService.GetNewsArticles().FirstOrDefault(m => m.NewsArticleId == id);
             if (newsarticle == null)
             {
-                return NotFound();
+                Message = "Not Found";
+                ModelState.AddModelError(string.Empty, Message);
+                return Page();
             }
             else
             {

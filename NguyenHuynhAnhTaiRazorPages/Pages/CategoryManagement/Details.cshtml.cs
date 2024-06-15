@@ -1,27 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using BusinessObjects.Entities;
 using Services.Interfaces;
 using System.Text.Json;
 
-namespace NguyenHuynhAnhTaiRazorPages.Pages.News
+namespace NguyenHuynhAnhTaiRazorPages.Pages.CategoryManagement
 {
-    public class NewsDetailModel : PageModel
+    public class DetailsModel : PageModel
     {
-        private readonly INewsArticleService _newsArticleService;
+        private readonly ICategoryService _categoryService;
 
-        public NewsDetailModel(INewsArticleService newsArticleService)
+        public DetailsModel(ICategoryService categoryService)
         {
-            _newsArticleService = newsArticleService;
+            _categoryService = categoryService;
         }
 
-        public NewsArticle NewsArticle { get; set; } = default!;
+        public Category Category { get; set; } = default!;
 
         public string? Message { get; set; }
 
-        public IActionResult OnGet(string id)
+        public IActionResult OnGet(short? id)
         {
-            if (!CheckSession())
+            if(!CheckSession())
                 return RedirectToPage("/LoginPage");
 
             if (id == null)
@@ -31,8 +32,8 @@ namespace NguyenHuynhAnhTaiRazorPages.Pages.News
                 return Page();
             }
 
-            var newsarticle = _newsArticleService.GetNewsArticles().FirstOrDefault(m => m.NewsArticleId == id);
-            if (newsarticle == null)
+            var category = _categoryService.GetCategories().FirstOrDefault(m => m.CategoryId == id);
+            if (category == null)
             {
                 Message = "Not Found";
                 ModelState.AddModelError(string.Empty, Message);
@@ -40,7 +41,7 @@ namespace NguyenHuynhAnhTaiRazorPages.Pages.News
             }
             else
             {
-                NewsArticle = newsarticle;
+                Category = category;
             }
             return Page();
         }

@@ -1,0 +1,117 @@
+﻿@page
+@model NguyenHuynhAnhTaiRazorPages.Pages.CategoryManagement.IndexModel
+
+@{
+    Layout = "_Layout";
+}
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="list-group">
+            <a href="/CategoryManagement/Index" class="list-group-item list-group-item-action">Category Management</a>
+            <a href="/NewsArticleManagement" class="list-group-item list-group-item-action">News Management</a>
+            <a href="/Tags" class="list-group-item list-group-item-action">Tags Management</a>
+            <a href="/Profile" class="list-group-item list-group-item-action">Profile Management</a>
+            <a href="/NewsArticleManagement/History" class="list-group-item list-group-item-action">Your History</a>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <h1>Categories Management</h1>
+        <a class="btn btn-primary createButton">Create</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Category[0].CategoryName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Category[0].CategoryDesciption)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Category)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CategoryName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CategoryDesciption)
+                        </td>
+                        <td class="d-flex flex-column justify-content-between">
+                            <a class="btn btn-warning updateButton" data-id="@item.CategoryId">Update</a>
+                            <a class="btn btn-danger deleteButton" data-id="@item.CategoryId">Delete</a>
+                            <button class="btn btn-primary detailsButton" data-id="@item.CategoryId">Details</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="formModalLabel">Form</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('body').on('click', '.createButton', function () {
+                window.location.href = '/CategoryManagement/Edit';
+            });
+
+            $('body').on('click', '.updateButton', function () {
+                var id = $(this).data('id');
+                window.location.href = '/CategoryManagement/Edit?id=' + id;
+            });
+
+            $('body').on('click', '.deleteButton', function () {
+                var id = $(this).data('id');
+                window.location.href = '/CategoryManagement/Delete?id=' + id;
+            });
+
+            $('body').on('click', '.detailsButton', function () {
+                var categoryId = $(this).data('id');
+                $('#formModalLabel').text('Detail');
+                openDetailsModal(categoryId);
+            });
+        });
+
+        function openDetailsModal(categoryId) {
+            $.ajax({
+                url: '/CategoryManagement/Details?id=' + categoryId,
+                method: 'GET',
+                success: function (data) {
+                    $('.modal-body').html(data);
+                    $('#formModal').modal('show');
+                },
+            });
+        }
+
+        function closeModal() {
+            $('#formModal').modal('hide');
+            window.location.href = '/CategoryManagement/Index';
+        }
+    </script>
+}

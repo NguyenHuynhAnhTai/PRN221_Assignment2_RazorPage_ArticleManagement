@@ -54,9 +54,17 @@
         document.addEventListener("DOMContentLoaded", function () {
             const errorMessage = document.getElementById("error-message");
             if (errorMessage) {
-                setTimeout(function () {
-                    errorMessage.style.display = "none";
-                }, 2000); // 2000 milliseconds = 2 seconds
+                const message = errorMessage.textContent.trim();
+                if (message === "Create successfully!" || message === "Update successfully!") {
+                    setTimeout(function () {
+                        errorMessage.style.display = "none";
+                        window.location.href = '/NewsArticleManagement/Index';
+                    }, 1000);
+                } else {
+                    setTimeout(function () {
+                        errorMessage.style.display = "none";
+                    }, 1000);
+                }
             }
         });
     </script>

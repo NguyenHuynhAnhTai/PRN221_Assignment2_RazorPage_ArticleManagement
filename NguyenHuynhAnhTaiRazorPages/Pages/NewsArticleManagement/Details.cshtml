@@ -67,4 +67,8 @@
     <dd class="col-8">
         @Html.DisplayFor(model => model.NewsArticle.CreatedBy.AccountName)
     </dd>
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div style="color: red" id="error-message">@Model.Message</div>
+    }
 </dl>
