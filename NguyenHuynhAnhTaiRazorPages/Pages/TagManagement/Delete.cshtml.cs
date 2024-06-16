@@ -1,38 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObjects.Entities;
+using Services.Interfaces;
+using System.Text.Json;
 
 namespace NguyenHuynhAnhTaiRazorPages.Pages.TagManagement
 {
     public class DeleteModel : PageModel
     {
-        private readonly BusinessObjects.Entities.FunewsManagementDbContext _context;
+        private readonly ITagService _tagService;
 
-        public DeleteModel(BusinessObjects.Entities.FunewsManagementDbContext context)
+        public DeleteModel(ITagService tagService)
         {
-            _context = context;
+            _tagService = tagService;
         }
 
         [BindProperty]
         public Tag Tag { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public string? Message { get; set; }
+
+        public IActionResult OnGet(int? id)
         {
+            if (!CheckSession())
+                return RedirectToPage("/LoginPage");
+
             if (id == null)
             {
-                return NotFound();
+                Message = "Not Found";
+                ModelState.AddModelError(string.Empty, Message);
+                return Page();
             }
 
-            var tag = await _context.Tags.FirstOrDefaultAsync(m => m.TagId == id);
+            var tag = _tagService.GetTags().FirstOrDefault(m => m.TagId == id);
 
             if (tag == null)
             {
-                return NotFound();
+                Message = "Not Found";
+                ModelState.AddModelError(string.Empty, Message);
+                return Page();
             }
             else
             {
@@ -41,22 +48,52 @@ namespace NguyenHuynhAnhTaiRazorPages.Pages.TagManagement
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public IActionResult OnPost(int? id)
         {
+            if (!CheckSession())
+                return RedirectToPage("/LoginPage");
+
             if (id == null)
             {
-                return NotFound();
+                Message = "Not Found";
+                ModelState.AddModelError(string.Empty, Message);
+                return Page();
             }
 
-            var tag = await _context.Tags.FindAsync(id);
-            if (tag != null)
+            var tag = _tagService.GetTags().FirstOrDefault(t => t.TagId == id);
+            if (tag == null)
             {
-                Tag = tag;
-                _context.Tags.Remove(Tag);
-                await _context.SaveChangesAsync();
+                Message = "Not Found";
+                ModelState.AddModelError(string.Empty, Message);
+                return Page();
+            }
+            
+            if (tag.NewsArticles.Count > 0)
+            {
+                Message = "Cannot delete tag because it is being used in news articles";
+                ModelState.AddModelError(string.Empty, Message);
+                return Page();
             }
 
-            return RedirectToPage("./Index");
+            Tag = tag;
+            _tagService.Delete(Tag);
+
+            Message = "Delete successfully!";
+            ModelState.AddModelError(string.Empty, Message);
+
+            return Page();
+        }
+
+        public bool CheckSession()
+        {
+            var loginAccount = HttpContext.Session.GetString("LoginSession");
+            if (loginAccount != null)
+            {
+                var account = JsonSerializer.Deserialize<SystemAccount>(loginAccount);
+                if (account != null && account.AccountRole == 1)
+                    return true;
+            }
+            return false;
         }
     }
 }

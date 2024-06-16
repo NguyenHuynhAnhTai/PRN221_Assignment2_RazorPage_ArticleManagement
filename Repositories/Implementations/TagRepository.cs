@@ -10,6 +10,8 @@ namespace Repositories.Implementations
 
         public void Update(Tag p) => TagDAO.Update(p);
 
+        public void Delete(Tag p) => TagDAO.Delete(p);
+
         public Tag? GetTagById(int tagId) => TagDAO.GetTagById(tagId);
 
         public List<Tag> GetTags() => TagDAO.GetTags();

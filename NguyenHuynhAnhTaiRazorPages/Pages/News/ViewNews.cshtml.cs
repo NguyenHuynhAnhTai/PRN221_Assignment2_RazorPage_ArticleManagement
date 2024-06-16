@@ -19,23 +19,8 @@ namespace NguyenHuynhAnhTaiRazorPages.Pages.News
 
         public IActionResult OnGet()
         {
-            if (!CheckSession())
-                return RedirectToPage("/LoginPage");
-
             NewsArticle = _newsArticleService.GetNewsArticles().Where(a => a.NewsStatus == true).ToList();
             return Page();
-        }
-
-        public bool CheckSession()
-        {
-            var loginAccount = HttpContext.Session.GetString("LoginSession");
-            if (loginAccount != null)
-            {
-                var account = JsonSerializer.Deserialize<SystemAccount>(loginAccount);
-                if (account != null && account.AccountRole == 1)
-                    return true;
-            }
-            return false;
         }
     }
 }

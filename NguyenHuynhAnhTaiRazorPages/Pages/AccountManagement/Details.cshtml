@@ -1,0 +1,44 @@
+﻿@page
+@model NguyenHuynhAnhTaiRazorPages.Pages.AccountManagement.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div>
+    <dl class="row">
+        <dt class="col-4">
+            @Html.DisplayNameFor(model => model.SystemAccount.AccountName)
+        </dt>
+        <dd class="col-8">
+            @Html.DisplayFor(model => model.SystemAccount.AccountName)
+        </dd>
+        <dt class="col-4">
+            @Html.DisplayNameFor(model => model.SystemAccount.AccountEmail)
+        </dt>
+        <dd class="col-8">
+            @Html.DisplayFor(model => model.SystemAccount.AccountEmail)
+        </dd>
+        <dt class="col-4">
+            @Html.DisplayNameFor(model => model.SystemAccount.AccountRole)
+        </dt>
+        @if (Model.SystemAccount.AccountRole == 1)
+        {
+            <dd class="col-8">Staff</dd>
+        }
+        else
+        {
+            <dd class="col-8">Lecturer</dd>
+        }
+        <dt class="col-4">
+            @Html.DisplayNameFor(model => model.SystemAccount.AccountPassword)
+        </dt>
+        <dd class="col-8">
+            @Html.DisplayFor(model => model.SystemAccount.AccountPassword)
+        </dd>
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div style="color: red" id="error-message">@Model.Message</div>
+        }
+    </dl>
+</div>

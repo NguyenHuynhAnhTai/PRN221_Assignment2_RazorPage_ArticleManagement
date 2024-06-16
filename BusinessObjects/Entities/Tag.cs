@@ -6,7 +6,7 @@ namespace BusinessObjects.Entities;
 public partial class Tag
 {
     [BindProperty]
-    [Required(ErrorMessage = "Tag Name is required.")]
+    [Required(ErrorMessage = "Tag Id is required.")]
     public int TagId { get; set; }
 
     [BindProperty]

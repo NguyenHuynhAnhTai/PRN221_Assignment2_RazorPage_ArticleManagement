@@ -1,5 +1,5 @@
 ﻿@page
-@model NguyenHuynhAnhTaiRazorPages.Pages.CategoryManagement.IndexModel
+@model NguyenHuynhAnhTaiRazorPages.Pages.AccountManagement.IndexModel
 
 @{
     Layout = "_Layout";
@@ -9,46 +9,63 @@
     ViewData["Title"] = "Index";
 }
 
+
 <div class="row">
     <h1>Menu</h1>
     <div class="col-md-3">
         <div class="list-group">
-            <a href="/CategoryManagement/Index" class="list-group-item list-group-item-action">Category Management</a>
-            <a href="/NewsArticleManagement" class="list-group-item list-group-item-action">News Management</a>
-            <a href="/TagManagement/Index" class="list-group-item list-group-item-action">Tags Management</a>
-            <a href="/ProfileManagement/AccountDetail" class="list-group-item list-group-item-action">Profile Management</a>
-            <a href="/NewsArticleManagement/History" class="list-group-item list-group-item-action">Your History</a>
+            <a href="/AccountManagement/Index" class="list-group-item list-group-item-action">Account Management</a>
+            <a href="/ReportStatistic/NewsReportModel" class="list-group-item list-group-item-action">Statistic Report</a>
         </div>
     </div>
     <div class="col-md-9">
-        <h1>Categories Management</h1>
-        <a class="btn btn-primary createButton">Create</a>
+        <h1>Account Management</h1>
+        <p>
+            <a asp-page="Create" class="btn btn-primary">Create New</a>
+        </p>
         <table class="table">
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Category[0].CategoryName)
+                        @Html.DisplayNameFor(model => model.SystemAccount[0].AccountName)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Category[0].CategoryDesciption)
+                        @Html.DisplayNameFor(model => model.SystemAccount[0].AccountEmail)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SystemAccount[0].AccountRole)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SystemAccount[0].AccountPassword)
                     </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Category)
+                @foreach (var item in Model.SystemAccount)
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.CategoryName)
+                            @Html.DisplayFor(modelItem => item.AccountName)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.CategoryDesciption)
+                            @Html.DisplayFor(modelItem => item.AccountEmail)
+                        </td>
+                        @if (item.AccountRole == 1)
+                        {
+                            <td>Staff</td>
+                        }
+                        else if (item.AccountRole == 2)
+                        {
+                            <td>Lecturer</td>
+                        }
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AccountPassword)
                         </td>
                         <td class="d-flex flex-column justify-content-between">
-                            <a class="btn btn-warning updateButton" data-id="@item.CategoryId">Update</a>
-                            <a class="btn btn-danger deleteButton" data-id="@item.CategoryId">Delete</a>
-                            <button class="btn btn-primary detailsButton" data-id="@item.CategoryId">Details</button>
+                            <a class="btn btn-warning updateButton" data-id="@item.AccountId">Update</a>
+                            <a class="btn btn-danger deleteButton" data-id="@item.AccountId">Delete</a>
+                            <button class="btn btn-primary detailsButton" data-id="@item.AccountId">Details</button>
                         </td>
                     </tr>
                 }
@@ -79,17 +96,17 @@
     <script>
         $(document).ready(function () {
             $('body').on('click', '.createButton', function () {
-                window.location.href = '/CategoryManagement/Edit';
+                window.location.href = '/AccountManagement/Create';
             });
 
             $('body').on('click', '.updateButton', function () {
                 var id = $(this).data('id');
-                window.location.href = '/CategoryManagement/Edit?id=' + id;
+                window.location.href = '/AccountManagement/Edit?id=' + id;
             });
 
             $('body').on('click', '.deleteButton', function () {
                 var id = $(this).data('id');
-                window.location.href = '/CategoryManagement/Delete?id=' + id;
+                window.location.href = '/AccountManagement/Delete?id=' + id;
             });
 
             $('body').on('click', '.detailsButton', function () {
@@ -101,7 +118,7 @@
 
         function openDetailsModal(categoryId) {
             $.ajax({
-                url: '/CategoryManagement/Details?id=' + categoryId,
+                url: '/AccountManagement/Details?id=' + categoryId,
                 method: 'GET',
                 success: function (data) {
                     $('.modal-body').html(data);
@@ -112,7 +129,7 @@
 
         function closeModal() {
             $('#formModal').modal('hide');
-            window.location.href = '/CategoryManagement/Index';
+            window.location.href = '/AccountManagement/Index';
         }
     </script>
 }

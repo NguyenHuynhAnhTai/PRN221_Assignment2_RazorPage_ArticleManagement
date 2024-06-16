@@ -5,8 +5,12 @@ namespace BusinessObjects.Entities;
 
 public partial class SystemAccount
 {
+    [BindProperty]
+    [Required(ErrorMessage = "Account Id is required.")]
     public short AccountId { get; set; }
 
+    [BindProperty]
+    [Required(ErrorMessage = "Account Name is required.")]
     public string? AccountName { get; set; }
 
     [BindProperty]

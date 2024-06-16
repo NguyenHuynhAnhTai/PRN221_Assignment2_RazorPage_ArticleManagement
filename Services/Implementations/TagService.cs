@@ -32,5 +32,10 @@ namespace Services.Implementations
         {
             iTagRepository.Update(p);
         }
+
+        public void Delete(Tag p)
+        {
+            iTagRepository.Delete(p);
+        }
     }
 }

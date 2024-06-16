@@ -11,7 +11,9 @@ namespace DataAccessLayer
             try
             {
                 using var context = new FunewsManagementDbContext();
-                listCatagories = context.SystemAccounts.ToList();
+                listCatagories = context.SystemAccounts
+                    .Include(x => x.NewsArticles)
+                    .ToList();
             }
             catch (Exception ex)
             {

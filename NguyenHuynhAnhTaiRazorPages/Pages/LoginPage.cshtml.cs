@@ -24,11 +24,6 @@ namespace NguyenHuynhAnhTaiRazorPages.Pages
 
         public IActionResult OnPostLogin()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
             var adminInfo = GetAdminInfo();
 
             SystemAccount? systemAccount = _systemAccountService.GetAccountByEmailAndPass(LoginAccount.AccountEmail, LoginAccount.AccountPassword);
@@ -37,13 +32,14 @@ namespace NguyenHuynhAnhTaiRazorPages.Pages
 
             if (adminInfo.adminEmail.Equals(LoginAccount.AccountEmail) && adminInfo.adminPassword.Equals(LoginAccount.AccountPassword))
             {
+                LoginAccount.AccountRole = -1;
                 jsonLoginAccount = JsonSerializer.Serialize(LoginAccount, new JsonSerializerOptions
                 {
                     AllowTrailingCommas = true,
                     WriteIndented = true
                 });
                 HttpContext.Session.SetString("LoginSession", jsonLoginAccount);
-                return RedirectToPage("/Admin");
+                return RedirectToPage("/AccountManagement/Index");
             }
             if (systemAccount is not null)
             {

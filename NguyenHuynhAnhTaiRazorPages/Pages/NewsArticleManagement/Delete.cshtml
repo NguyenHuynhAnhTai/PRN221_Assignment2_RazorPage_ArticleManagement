@@ -93,7 +93,7 @@
         const errorMessage = document.getElementById("error-message");
         if (errorMessage) {
             const message = errorMessage.textContent.trim();
-            if (message === "Delete successfully!") {
+            if (message !== "") {
                 setTimeout(function () {
                     errorMessage.style.display = "none";
                     window.location.href = '/NewsArticleManagement/Index';

@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using BusinessObjects.Entities;
 using Services.Interfaces;
 using System.Text.Json;
 
-namespace NguyenHuynhAnhTaiRazorPages.Pages.News
+namespace NguyenHuynhAnhTaiRazorPages.Pages.ReportStatistic
 {
-    public class NewsDetailModel : PageModel
+    public class DetailsModel : PageModel
     {
         private readonly INewsArticleService _newsArticleService;
 
-        public NewsDetailModel(INewsArticleService newsArticleService)
+        public DetailsModel(INewsArticleService newsArticleService)
         {
             _newsArticleService = newsArticleService;
         }
@@ -21,6 +22,9 @@ namespace NguyenHuynhAnhTaiRazorPages.Pages.News
 
         public IActionResult OnGet(string id)
         {
+            if (!CheckSession())
+                return RedirectToPage("/LoginPage");
+
             if (id == null)
             {
                 Message = "Not Found";
@@ -40,6 +44,18 @@ namespace NguyenHuynhAnhTaiRazorPages.Pages.News
                 NewsArticle = newsarticle;
             }
             return Page();
+        }
+
+        public bool CheckSession()
+        {
+            var loginAccount = HttpContext.Session.GetString("LoginSession");
+            if (loginAccount != null)
+            {
+                var account = JsonSerializer.Deserialize<SystemAccount>(loginAccount);
+                if (account != null && account.AccountRole == -1)
+                    return true;
+            }
+            return false;
         }
     }
 }
